@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   try {
     await resend.emails.send({
       from: 'onboarding@resend.dev',
-      to: 'your-personal-email@gmail.com', // Your registered Resend email
+      to: 'homesolutions.obsidian@gmail.com', // Your registered Resend email
       subject: 'New Form Submission',
       html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
     });
