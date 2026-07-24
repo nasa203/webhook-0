@@ -11,7 +11,6 @@ export default async function handler(req, res) {
   const formFieldsHtml = Object.entries(req.body)
     .map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`)
     .join('');
-
   try {
     await resend.emails.send({
       from: 'onboarding@resend.dev',
