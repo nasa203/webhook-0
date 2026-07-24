@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     // 4. Trigger Resend
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev',
-      to: 'YOUR-EXACT-RESEND-EMAIL@gmail.com', // 👈 Put your real Resend login email here
+      to: 'homesolutions.obsidian@gmail.com', 
       subject: body.Subject || 'New Form Submission',
       html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
     });
