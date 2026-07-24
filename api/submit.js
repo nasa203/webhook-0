@@ -21,16 +21,20 @@ export default async function handler(req, res) {
     .map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`)
     .join('');
 
-  try {
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: 'homesolutions.obsidian@gmail.com', // Your registered Resend email
-      subject: 'New Form Submission',
-      html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
-    });
+try {
+  const { data, error } = await resend.emails.send({
+    from: 'onboarding@resend.dev',
+    to: 'homesolutions.obsidian@gmail.com',
+    subject: 'New Form Submission',
+    html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
+  });
 
-    return res.status(200).json({ success: true, message: 'Sent!' });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
+  if (error) {
+    console.error('Resend Error:', error);
+    return res.status(400).json({ success: false, error });
   }
+
+  return res.status(200).json({ success: true, data });
+} catch (error) {
+  return res.status(500).json({ error: error.message });
 }
