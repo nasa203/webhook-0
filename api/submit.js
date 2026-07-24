@@ -29,7 +29,6 @@ try {
     html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
   });
 
-  // 🚨 THIS LOG WILL TELL YOU EXACTLY WHAT FAILS
   console.log("RESEND API RESPONSE:", JSON.stringify(response));
 
   if (response.error) {
