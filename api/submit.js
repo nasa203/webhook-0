@@ -22,12 +22,25 @@ export default async function handler(req, res) {
     .join('');
 
 try {
-  const { data, error } = await resend.emails.send({
+  const response = await resend.emails.send({
     from: 'onboarding@resend.dev',
-    to: 'homesolutions.obsidian@gmail.com',
+    to: 'your-exact-signup-email@gmail.com',
     subject: 'New Form Submission',
     html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
   });
+
+  // 🚨 THIS LOG WILL TELL YOU EXACTLY WHAT FAILS
+  console.log("RESEND API RESPONSE:", JSON.stringify(response));
+
+  if (response.error) {
+    return res.status(400).json({ success: false, error: response.error });
+  }
+
+  return res.status(200).json({ success: true, data: response.data });
+} catch (error) {
+  console.error("SERVER CATCH ERROR:", error);
+  return res.status(500).json({ error: error.message });
+}
 
   if (error) {
     console.error('Resend Error:', error);
