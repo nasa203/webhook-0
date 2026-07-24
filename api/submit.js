@@ -3,25 +3,30 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
+  // Allow requests from any origin (or replace '*' with your specific domain)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle browser OPTIONS preflight check
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Convert all key-value pairs in req.body into HTML list items
   const formFieldsHtml = Object.entries(req.body)
     .map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`)
     .join('');
+
   try {
     await resend.emails.send({
       from: 'onboarding@resend.dev',
-      to: 'homesolutions.obsidian@gmail.com', 
+      to: 'your-personal-email@gmail.com', // Your registered Resend email
       subject: 'New Form Submission',
-      html: `
-        <h2>Form Details</h2>
-        <ul>
-          ${formFieldsHtml}
-        </ul>
-      `
+      html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
     });
 
     return res.status(200).json({ success: true, message: 'Sent!' });
