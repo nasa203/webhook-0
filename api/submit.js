@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev',
-      to: 'your-actual-email@gmail.com', // Your registered Resend email
+      to: 'homesolutions.obsidian@gmail.com', // Your registered Resend email
       subject: bodyData.Subject || 'New Webstudio Form Submission',
       html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
     });
