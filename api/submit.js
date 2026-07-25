@@ -23,7 +23,6 @@ export default async function handler(req, res) {
       try {
         bodyData = JSON.parse(bodyData);
       } catch {
-        // Parse standard URL-encoded form data (key1=val1&key2=val2)
         const params = new URLSearchParams(bodyData);
         bodyData = Object.fromEntries(params.entries());
       }
@@ -31,24 +30,28 @@ export default async function handler(req, res) {
 
     bodyData = bodyData || {};
 
-    const formFieldsHtml = Object.entries(bodyData)
+    const entries = Object.entries(bodyData);
+    if (entries.length === 0) {
+      console.log('Received empty payload — skipping email dispatch.');
+      return res.status(200).json({ success: true, message: 'Ignored empty submission' });
+    }
+
+    const formFieldsHtml = entries
       .map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`)
       .join('');
 
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev',
-      to: 'homesolutions.obsidian@gmail.com',
+      to: 'your-actual-email@gmail.com', // Your registered Resend email
       subject: bodyData.Subject || 'New Webstudio Form Submission',
       html: `<h2>Form Details</h2><ul>${formFieldsHtml}</ul>`
     });
 
     if (error) {
       console.error('Resend Error:', error);
-      // Return 400 so Webstudio automatically triggers the FAIL state
       return res.status(400).json({ success: false, error });
     }
 
-    // Return 200 so Webstudio automatically triggers the SUCCESS state
     return res.status(200).json({ success: true, data });
 
   } catch (error) {
